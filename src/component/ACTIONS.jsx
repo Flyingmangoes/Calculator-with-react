@@ -1,7 +1,7 @@
 import '../css/ACTIONS.css'
 
 
-const ACTION = {
+export const ACTION = {
     ADD_DIGIT: 'add-digit',
     CHOOSE_OPERATION: 'choose-operation',
     CLEAR: 'clear',
@@ -28,9 +28,20 @@ export function Reducer(state, { type, payload}) {
             return {}
         
         case ACTION.DELETE:
-            return {
-            
+            if (state.currentOperand == null) return state;
+
+            if (state.currentOperand.length === 1) {
+                return {
+                    ...state,
+                    currentOperand: null,
+                }
             }
+        
+            return {
+                ...state,
+                currentOperand: state.currentOperand.slice(0, -1),
+            }
+
 
         case ACTION.CHOOSE_OPERATION:
             if (state.currentOperand == null && state.previousOperand == null) {
@@ -72,7 +83,7 @@ export function Numberpad({ dispatch }) {
         <div className='calculatorgrid'>
             <div className="calculatorinput">
                 <button className='span-two' onClick={() => dispatch({ type: ACTION.CLEAR})}>AC</button>
-                <button>DEL</button>
+                <button onClick={() => dispatch({ type: ACTION.DELETE})}>DEL</button>
                 <button onClick={() => dispatch({ type: ACTION.CHOOSE_OPERATION, payload: { operation: '/'} })}>/</button>
 
                 <button onClick={() => dispatch({ type: ACTION.ADD_DIGIT, payload: { digit: '1'} })}>1</button>

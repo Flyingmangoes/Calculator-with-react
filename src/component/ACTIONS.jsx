@@ -1,4 +1,3 @@
-import { useState, useReducer } from 'react' 
 import '../css/ACTIONS.css'
 
 
@@ -13,36 +12,86 @@ const ACTION = {
 export function Reducer(state, { type, payload}) {
     switch(type) {
         case ACTION.ADD_DIGIT:
+            if (payload.digit === "0" && state.currentOperand === "0") {
+                return state;
+            }
+            if (payload.digit === "." && state.currentOperand.includes(".")) {
+                return state;
+            }
+
             return {
             ...state,
-        currentOperand: `${currentOperand}${payload.digit}` 
+            currentOperand: `${state.currentOperand || ''}${payload.digit}`, 
+        }
+
+        case ACTION.CLEAR:
+            return {}
+        
+        case ACTION.DELETE:
+            return {
+            
+            }
+
+        case ACTION.CHOOSE_OPERATION:
+            if (state.currentOperand == null && state.previousOperand == null) {
+                return state;
+            }
+
+            if (state.previousOperand == null) {
+                return {
+                    ...state,
+                    operation: payload.operation,
+                    previousOperand: state.currentOperand,
+                    currentOperand: null,
+            };
+        }
+        
+        if (state.currentOperand == null) {
+            return {
+              ...state,
+                operation: payload.operation,
+            };
+        }
+
+        return {
+            ...state,
+            previousOperand: evaluate(state),
+            operation: payload.operation,
+            currentOperand: null,   
         };
+
+        case ACTION.EVALUATE:
+            return {
+
+            }
     }
 }
 
-export function Numberpad() {
-
-
+export function Numberpad({ dispatch }) {
     return (
         <div className='calculatorgrid'>
             <div className="calculatorinput">
-                <button className='span-two'>AC</button>
+                <button className='span-two' onClick={() => dispatch({ type: ACTION.CLEAR})}>AC</button>
                 <button>DEL</button>
-                <button>/</button>
-                <button>1</button>
-                <button>2</button>
-                <button>3</button>
-                <button>*</button>
-                <button>4</button>
-                <button>5</button>
-                <button>6</button>
-                <button>+</button>
-                <button>7</button>
-                <button>8</button>
-                <button>9</button>
-                <button>-</button>
-                <button>.</button>
-                <button>0</button>
+                <button onClick={() => dispatch({ type: ACTION.CHOOSE_OPERATION, payload: { operation: '/'} })}>/</button>
+
+                <button onClick={() => dispatch({ type: ACTION.ADD_DIGIT, payload: { digit: '1'} })}>1</button>
+                <button onClick={() => dispatch({ type: ACTION.ADD_DIGIT, payload: { digit: '2'} })}>2</button>
+                <button onClick={() => dispatch({ type: ACTION.ADD_DIGIT, payload: { digit: '3'} })}>3</button>
+                <button onClick={() => dispatch({ type: ACTION.CHOOSE_OPERATION, payload: { operation: '*'}})}>*</button>
+
+                <button onClick={() => dispatch({ type: ACTION.ADD_DIGIT, payload: { digit: '4'} })}>4</button>
+                <button onClick={() => dispatch({ type: ACTION.ADD_DIGIT, payload: { digit: '5'} })}>5</button>
+                <button onClick={() => dispatch({ type: ACTION.ADD_DIGIT, payload: { digit: '6'} })}>6</button>
+                <button onClick={() => dispatch({ type: ACTION.CHOOSE_OPERATION, payload: {operation: '+'} })}>+</button>
+
+                <button onClick={() => dispatch({ type: ACTION.ADD_DIGIT, payload: { digit: '7'} })}>7</button>
+                <button onClick={() => dispatch({ type: ACTION.ADD_DIGIT, payload: { digit: '8'} })}>8</button>
+                <button onClick={() => dispatch({ type: ACTION.ADD_DIGIT, payload: { digit: '9'} })}>9</button>
+                <button onClick={() => dispatch({ type: ACTION.CHOOSE_OPERATION, payload: {operation: '-'} })}>-</button>
+
+                <button onClick={() => dispatch({ type: ACTION.ADD_DIGIT, payload: { digit: '.'} })}>.</button>
+                <button onClick={() => dispatch({ type: ACTION.ADD_DIGIT, payload: { digit: '0'} })}>0</button>
                 <button className='span-two'>=</button>
             </div>
         </div>

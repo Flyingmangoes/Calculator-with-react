@@ -1,0 +1,27 @@
+.calculatorbox {
+    position: relative;
+    width: 400px;
+    height: 500px;
+    background: rgb(0, 0, 0, 0.8);
+    margin: 0 auto;
+}
+
+.outputbox {
+    width: 100%;
+    height: 20%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.output {
+    width: 100%;
+    height: 100%;
+    padding: 20px 0;
+    display: flex;
+    justify-content: end;
+    align-items: center;
+    color: white;
+}
+
+.

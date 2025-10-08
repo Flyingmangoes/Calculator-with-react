@@ -9,7 +9,7 @@ export const ACTION = {
     EVALUATE: 'evaluate'
 };
 
-export function Reducer(state, { type, payload}) {
+export function Reducer(state, { type, payload }) {
     switch(type) {
         case ACTION.ADD_DIGIT:
             if (payload.digit === "0" && state.currentOperand === "0") {
@@ -72,11 +72,44 @@ export function Reducer(state, { type, payload}) {
         };
 
         case ACTION.EVALUATE:
-            return {
-
+            if (state.previousOperand == null || state.currentOperand == null || state.operation == null) {
+                return state;
             }
-    }
+
+            const prev = parseFloat(state.previousOperand);
+            const current   = parseFloat(state.currentOperand);
+            let computation = ''
+            
+            switch (state.operation) {
+                case '+':
+                    computation = prev + current
+                    break
+
+                case '-':
+                    computation = prev - current
+                    break
+            
+                case '*':
+                    computation = prev * current
+                    break
+
+                case '/':
+                    computation = current !== 0 ? prev / current: 'Error'
+                    break
+
+                default:
+                    return state
+            }
+
+            return {
+                ...state,
+                currentOperand: computation.toString(),
+                previousOperand: null,
+                operation: null,
+            }
+    }    
 }
+
 
 export function Numberpad({ dispatch }) {
     return (
@@ -103,7 +136,7 @@ export function Numberpad({ dispatch }) {
 
                 <button onClick={() => dispatch({ type: ACTION.ADD_DIGIT, payload: { digit: '.'} })}>.</button>
                 <button onClick={() => dispatch({ type: ACTION.ADD_DIGIT, payload: { digit: '0'} })}>0</button>
-                <button className='span-two'>=</button>
+                <button className='span-two' onClick={() => dispatch({ type: ACTION.EVALUATE})}>=</button>
             </div>
         </div>
     );

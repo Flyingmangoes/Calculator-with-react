@@ -7,15 +7,15 @@ function App() {
   useEffect(() => {
     const handlekeydown = (e) => {
       if (e.key === "Backspace") {
-        dispatch({ type: ACTION.DELETE})
+        dispatch({ type: ACTION.DELETE});
       }
-    }
+    };
 
-    window.addEventListener('keydown', handlekeydown)
-    return () => window.removeEventListener('keydown', handlekeydown)
+    window.addEventListener('keydown', handlekeydown);
+    return () => window.removeEventListener('keydown', handlekeydown);
   }, [])
 
-  return(
+  return (
       <div className='calculatorbox'>
         <div className='outputbox'>
             <div className='output'>
